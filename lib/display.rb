@@ -1,7 +1,10 @@
 class Display
+    attr_reader :bad_guesses, :guesses, :word
+
     def initialize(word)
         @word = word
         @game_board = Array.new(@word.length, "_")
+        @guesses = Array.new
         @bad_guesses = 0
     end
 
@@ -10,13 +13,19 @@ class Display
     end
 
     def update(choice)
+        @guesses.push(choice.capitalize)
+        good_guess = false
         split_word = @word.split('')
+
         split_word.each_with_index do |letter, index|
             if letter == choice
                 @game_board[index] = letter.capitalize
-            else
-                @bad_guesses += 1
+                good_guess = true
             end
+        end
+
+        if good_guess == false
+            @bad_guesses += 1
         end
     end
 
