@@ -80,6 +80,8 @@ while game_over == false
     display.update(guess)
     check = display.check_status
     if check == "winner"
+        puts " "
+        display.draw
         puts "\r\n#{name.capitalize}, Nice Work. You WON!!"
         game_over = true
     elsif check == "looser"
