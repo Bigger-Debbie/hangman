@@ -1,6 +1,12 @@
 require_relative 'random_word.rb'
 require_relative 'display.rb'
 
+def get_name(path)
+    split = path.split("/")
+    file_name = split[2].split(".")
+    return file_name[0]
+end
+
 word = RandomWord.pick_random
 display = Display.new(word)
 game_over = false
@@ -13,21 +19,21 @@ name = gets.chomp.strip
 
 if !Dir.glob("../saves/*.yaml").empty?
     print "Would You Like To Load A Save File? (y/n): "
-    while load? = gets.chomp.strip.downcase
-        if load? != 'y' || load? != 'n'
-            print "Please Enter 'y' Or 'n', Try Again: "
-        else
+    while answer = gets.chomp.strip.downcase
+        if answer == 'y' || answer == 'n'
             break
+        else
+            print "Please Enter 'y' Or 'n', Try Again: "
         end
     end
 
-    if load? == 'y'
+    if answer == 'y'
         saves = Dir.glob("../saves/*.yaml")
-        puts "Choose A Save Date From The List Below -"
-        saves.each {|save| puts save}
-        print "\r\nEnter Date To Load (00-00-00): "
+        puts "\r\nChoose A Save From The List Below -\n\r\n"
+        saves.each {|save| puts "- #{get_name(save)}"}
+        print "\r\nEnter Save To Load: "
         while load_file = gets.chomp.strip
-            if !saves.include?("#{load_file}.yaml")
+            if !saves.include?("../saves/#{load_file}.yaml")
                 puts "That Save Does Not Exist, Choose From The List Above."
                 print "Enter Date To Load (00-00-00): "
             else
@@ -35,7 +41,7 @@ if !Dir.glob("../saves/*.yaml").empty?
             end
         end
 
-        #load save file
+        display = Display.load("../saves/#{load_file}.yaml")
     end
 end
 
@@ -52,6 +58,7 @@ while game_over == false
     while guess = gets.chomp.strip.downcase
         if guess == 'sq'
             save_quit = true
+            break
         end
 
         if guess.length != 1
@@ -64,7 +71,9 @@ while game_over == false
     end
 
     if save_quit == true
-        #save file
+        print "Enter Save Name: "
+        save_name = gets.chomp.strip
+        display.save(save_name)
         break
     end
 

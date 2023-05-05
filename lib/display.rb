@@ -1,3 +1,5 @@
+require 'yaml'
+
 class Display
     attr_reader :bad_guesses, :guesses, :word
 
@@ -36,4 +38,18 @@ class Display
             return "looser"
         end
     end
+
+    def save(save_name)
+        save_data = YAML.dump(self)
+        File.open("../saves/#{save_name}.yaml", "w") do |file|
+            file.write(save_data)
+        end
+    end
+
+    def self.load(file)
+        data = File.read(file)
+        saved = Psych.safe_load(data, permitted_classes: [Display])
+        saved
+    end
+
 end
