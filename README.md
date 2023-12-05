@@ -1,2 +1,2 @@
 # hangman
-Practice ruby hangman command line game.
+Practice hangman command line game.
